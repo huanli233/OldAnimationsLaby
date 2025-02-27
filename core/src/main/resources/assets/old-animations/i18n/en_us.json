@@ -1,0 +1,21 @@
+{
+  "old-animations": {
+    "settings": {
+      "enabled": {
+        "name": "Enabled"
+      },
+      "blockhit": {
+        "name": "Blockhit"
+      },
+      "pushing": {
+        "name": "Pushing"
+      },
+      "pushingParticle": {
+        "name": "Pushing Particle"
+      },
+      "armorDamage": {
+        "name": "Armor Damage"
+      }
+    }
+  }
+}
