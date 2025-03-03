@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(PlayerControllerMP.class)
+@Mixin(value = PlayerControllerMP.class, priority = 2000)
 public class MixinPlayerControllerMP {
 
   @Inject(method = "getIsHittingBlock", at = @At("HEAD"), cancellable = true)

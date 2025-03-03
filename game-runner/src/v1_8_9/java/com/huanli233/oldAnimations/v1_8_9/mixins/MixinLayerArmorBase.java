@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(LayerArmorBase.class)
+@Mixin(value = LayerArmorBase.class, priority = 2000)
 public class MixinLayerArmorBase {
 
   @Inject(method = "shouldCombineTextures", at = @At("HEAD"), cancellable = true)
@@ -16,7 +16,8 @@ public class MixinLayerArmorBase {
 
     OldAnimationsConfiguration configuration = OldAnimationsAddon.get().configuration();
 
-    cir.setReturnValue(configuration.enabled().getOrDefault(true) && configuration.armorDamage.getOrDefault(false));
+    if (configuration.enabled().getOrDefault())
+      cir.setReturnValue(configuration.armorDamage.getOrDefault());
   }
 
 }

@@ -8,14 +8,16 @@ import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.MovingObjectPosition;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Minecraft.class)
+@Mixin(value = Minecraft.class, priority = 2000)
 public class MixinMinecraft {
 
   @Shadow
@@ -52,7 +54,7 @@ public class MixinMinecraft {
             effectRenderer.addBlockHitEffects(objectMouseOver.getBlockPos(), objectMouseOver.sideHit);
           }
 
-          if (!thePlayer.isSwingInProgress || thePlayer.swingProgressInt >= ((EntityLivingBaseInvoker) thePlayer).invokeGetArmSwingAnimationEnd() / 2 || thePlayer.swingProgressInt < 0) {
+          if (!thePlayer.isSwingInProgress || thePlayer.swingProgressInt >= oldAnimationsLaby$getArmSwingAnimationEnd(thePlayer) / 2 || thePlayer.swingProgressInt < 0) {
             thePlayer.swingProgressInt = -1;
             thePlayer.isSwingInProgress = true;
           }
@@ -60,6 +62,15 @@ public class MixinMinecraft {
       } else {
         playerController.resetBlockRemoving();
       }
+    }
+  }
+
+  @Unique
+  private int oldAnimationsLaby$getArmSwingAnimationEnd(EntityPlayerSP thePlayer) {
+    if (thePlayer.isPotionActive(Potion.digSpeed)) {
+      return 6 - (1 + thePlayer.getActivePotionEffect(Potion.digSpeed).getAmplifier());
+    } else {
+      return thePlayer.isPotionActive(Potion.digSlowdown) ? 6 + (1 + thePlayer.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2 : 6;
     }
   }
 
